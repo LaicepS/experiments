@@ -48,14 +48,14 @@ bool can_climb(Member const& top, Member const& below) {
   return top.height < below.height && top.weight < below.weight;
 }
 
-Graph build_acyclic_graph(vector<Member> const& members) {
-  auto build_neighbors = [&](auto const& m) {
-    auto climbable = members | rv::filter([&](auto const& other) { return can_climb(m, other); });
-    return climbable;
-  };
+auto build_neighbors(Member const& m, vector<Member> const& candidates) {
+  return candidates | rv::filter([&](Member const& cand) { return can_climb(m, cand); });
+}
 
-  auto node_to_neighbors =
-      members | rv::transform([&](auto const& m) { return make_pair(m, build_neighbors(m)); });
+Graph build_acyclic_graph(vector<Member> const& members) {
+  auto node_to_neighbors = members | rv::transform([&](auto const& m) {
+                             return make_pair(m, build_neighbors(m, members));
+                           });
 
   return ranges::to<Graph>(node_to_neighbors);
 }
