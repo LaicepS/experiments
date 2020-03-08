@@ -51,7 +51,7 @@ bool can_climb(Member const& top, Member const& below) {
 Graph build_acyclic_graph(vector<Member> const& members) {
   auto build_neighbors = [&](auto const& m) {
     auto climbable = members | rv::filter([&](auto const& other) { return can_climb(m, other); });
-    return ranges::to<vector<Member>>(climbable);
+    return climbable;
   };
 
   auto node_to_neighbors =
