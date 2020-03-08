@@ -80,7 +80,6 @@ PathSize longuest_path(Graph const& graph,
 }
 
 PathSize longuest_path(Graph const& graph) {
-  PathSize longuest(-1);
   unordered_map<Member, PathSize> members_longuest_path;
 
   auto all_longuest_path = graph | rv::transform([&](auto const& node) {
