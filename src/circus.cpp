@@ -7,11 +7,11 @@
 #include "NamedType/named_type.hpp"
 #include "NamedType/underlying_functionalities.hpp"
 
-#include "range-v3/include/range/v3/action.hpp"
-#include "range-v3/include/range/v3/algorithm.hpp"
-#include "range-v3/include/range/v3/range.hpp"
-#include "range-v3/include/range/v3/range/conversion.hpp"
-#include "range-v3/include/range/v3/view.hpp"
+#include "range/v3/action.hpp"
+#include "range/v3/algorithm.hpp"
+#include "range/v3/range.hpp"
+#include "range/v3/range/conversion.hpp"
+#include "range/v3/view.hpp"
 
 using Height = fluent::NamedType<int, struct HeightTag, fluent::Comparable>;
 using Weight = fluent::NamedType<int, struct WidthTag, fluent::Comparable>;
