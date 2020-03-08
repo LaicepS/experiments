@@ -17,3 +17,4 @@ include_directories(.)
 include_directories(range-v3/include)
 
 add_executable(circus src/circus.cpp)
+add_executable(kth_multiple src/kth_multiple.cpp)
