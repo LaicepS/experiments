@@ -18,3 +18,5 @@ include_directories(range-v3/include)
 
 add_executable(circus src/circus.cpp)
 add_executable(kth_multiple src/kth_multiple.cpp)
+add_executable(em src/emsdk.cpp)
+target_link_libraries(em SDL)
