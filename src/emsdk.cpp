@@ -1,47 +1,79 @@
-#include <SDL/SDL.h>
-#include <chrono>
+#include <SDL2/SDL.h>
+#include <csignal>
 #include <cstdlib>
-#include <stdio.h>
-#include <thread>
+#include <ctime>
+#include <iostream>
+#include <vector>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
-using namespace std::chrono_literals;
+using namespace std;
+
+vector<SDL_Point> get_random_points() {
+  srand(time(NULL));
+  vector<SDL_Point> result;
+  int curr_y = 400;
+  for (int i = 0; i < 100; i++) {
+    SDL_Point point;
+    point.x = 10 * i + 10;
+    auto rand = std::rand();
+
+    if (rand % 2 == 0)
+      curr_y += 20;
+    else
+      curr_y -= 20;
+
+    point.y = curr_y;
+    result.push_back(point);
+  }
+
+  return result;
+}
 
 extern "C" int main() {
-  printf("hello, world!\n");
-
-  SDL_Init(SDL_INIT_VIDEO);
-  SDL_Surface *screen = SDL_SetVideoMode(256, 256, 32, SDL_SWSURFACE);
-
-#ifdef TEST_SDL_LOCK_OPTS
-  EM_ASM("SDL.defaults.copyOnLock = false; SDL.defaults.discardOnLock = true; SDL.defaults.opaqueFrontBuffer = false;");
-#endif
-
-  if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
-  for (int i = 0; i < 256; i++) {
-    for (int j = 0; j < 256; j++) {
-#ifdef TEST_SDL_LOCK_OPTS
-      // Alpha behaves like in the browser, so write proper opaque pixels.
-      int alpha = 255;
-#else
-      // To emulate native behavior with blitting to screen, alpha component is ignored. Test that it is so by outputting
-      // data (and testing that it does get discarded)
-      int alpha = (i+j) % 255;
-#endif
-      *((Uint32*)screen->pixels + i * 256 + j) = SDL_MapRGBA(screen->format, i, j, 255-i, alpha);
-    }
+  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+    std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+    return 1;
   }
-  if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
-  SDL_Flip(screen);
 
-  printf("you should see a smoothly-colored square - no sharp lines but the square borders!\n");
-  printf("and here is some text that should be HTML-friendly: amp: |&| double-quote: |\"| quote: |'| less-than, greater-than, html-like tags: |<cheez></cheez>|\nanother line.\n");
+  SDL_Window *win =
+      SDL_CreateWindow("Hello World!", 100, 100, 1500, 800, SDL_WINDOW_SHOWN);
+  if (win == nullptr) {
+    std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+    SDL_Quit();
+    return 1;
+  }
 
-  std::this_thread::sleep_for(10s);
+  SDL_Renderer *ren = SDL_CreateRenderer(
+      win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  if (ren == nullptr) {
+    SDL_DestroyWindow(win);
+    std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+    SDL_Quit();
+    return 1;
+  }
 
+  SDL_SetRenderDrawColor(ren, 255, 255, 255, 0);
+  SDL_RenderClear(ren);
+  SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+  SDL_RenderDrawLine(ren, 0, 400, 999, 400);
+
+  auto points = get_random_points();
+
+  for (int i = 0; i < 3; ++i) {
+    // First clear the renderer
+    SDL_RenderDrawLines(ren, points.data(), points.size());
+
+    // Update the screen
+    SDL_RenderPresent(ren);
+    // Take a quick break after all that hard work
+    SDL_Delay(5000);
+  }
+
+  SDL_DestroyRenderer(ren);
+  SDL_DestroyWindow(win);
   SDL_Quit();
 
   return 0;
