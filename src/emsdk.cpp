@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_pixels.h>
 #include <csignal>
 #include <cstdlib>
 #include <ctime>
@@ -32,6 +33,41 @@ vector<SDL_Point> get_random_points() {
   return result;
 }
 
+void draw_stage(SDL_Renderer *ren) {
+  SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
+  SDL_Rect scene;
+  scene.h = 50;
+  scene.w = 800;
+
+  scene.x = 50;
+  scene.y = 50;
+
+  SDL_RenderDrawRect(ren, &scene);
+}
+
+void draw_singer(SDL_Renderer *ren) {
+  SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
+
+  SDL_Rect singer;
+  singer.h = 10;
+  singer.w = 10;
+  singer.x = 425;
+  singer.y = 75;
+
+  SDL_RenderDrawRect(ren, &singer);
+}
+
+void draw_scene(SDL_Renderer *ren) {
+  SDL_SetRenderDrawColor(ren, 255, 255, 255, SDL_ALPHA_OPAQUE);
+  SDL_RenderClear(ren);
+
+  draw_stage(ren);
+  draw_singer(ren);
+
+  SDL_RenderPresent(ren);
+  SDL_Delay(4000);
+}
+
 extern "C" int main() {
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
@@ -55,22 +91,7 @@ extern "C" int main() {
     return 1;
   }
 
-  SDL_SetRenderDrawColor(ren, 255, 255, 255, 0);
-  SDL_RenderClear(ren);
-  SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
-  SDL_RenderDrawLine(ren, 0, 400, 999, 400);
-
-  auto points = get_random_points();
-
-  for (int i = 0; i < 3; ++i) {
-    // First clear the renderer
-    SDL_RenderDrawLines(ren, points.data(), points.size());
-
-    // Update the screen
-    SDL_RenderPresent(ren);
-    // Take a quick break after all that hard work
-    SDL_Delay(5000);
-  }
+  draw_scene(ren);
 
   SDL_DestroyRenderer(ren);
   SDL_DestroyWindow(win);
