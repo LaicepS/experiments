@@ -9,7 +9,7 @@ set(CPP_WARNINGS " \
     -pedantic \
 ")
 
-set(CMAKE_CXX_COMPILER g++)
+set(CMAKE_CXX_COMPILER clang++)
 
 set(CMAKE_CXX_FLAGS "-std=c++17 -Werror ${CPP_WARNINGS} ${CMAKE_CXX_FLAGS}")
 
