@@ -1,13 +1,14 @@
 #include <algorithm>
 #include <cassert>
+#include <experimental/string_view>
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 
 #include "NamedType/named_type.hpp"
-#include "NamedType/underlying_functionalities.hpp"
 
 using namespace std;
+using namespace std::experimental;
 
 using Dict = unordered_set<string>;
 using Cost = int;
@@ -33,8 +34,8 @@ Cost cost(string const &word, Dict const &dict) {
   return Cost(word.size());
 }
 
-Cost respace(string const &text, size_t text_index, string const &curr_word,
-             Dict const &dict, Cache &cache) {
+Cost respace(string_view const &text, size_t text_index,
+             string const &curr_word, Dict const &dict, Cache &cache) {
   if (text_index == text.size())
     return cost(curr_word, dict);
 
@@ -54,7 +55,7 @@ Cost respace(string const &text, size_t text_index, string const &curr_word,
   return best;
 }
 
-int respace(string const &text, Dict const &dict) {
+int respace(string_view const &text, Dict const &dict) {
   if (text.size() == 0)
     return 0;
 
