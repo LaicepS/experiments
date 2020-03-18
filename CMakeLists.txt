@@ -9,7 +9,7 @@ set(CPP_WARNINGS " \
     -pedantic \
 ")
 
-set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_COMPILER g++)
 
 set(CMAKE_CXX_FLAGS "-std=c++17 -Werror ${CPP_WARNINGS} ${CMAKE_CXX_FLAGS}")
 
@@ -25,3 +25,17 @@ add_executable(em src/emsdk.cpp)
 target_link_libraries(em SDL2)
 
 add_executable(word_distance src/word_distance.cpp)
+
+find_package( CGAL QUIET COMPONENTS  )
+include( ${CGAL_USE_FILE} )
+find_package( Boost REQUIRED )
+
+
+set_source_files_properties(src/cgal.cpp PROPERTIES COMPILE_OPTIONS -fno-rounding-math)
+
+add_executable(cgal src/cgal.cpp)
+
+add_to_cached_list( CGAL_EXECUTABLE_TARGETS cgal )
+target_link_libraries(cgal   ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} )
+
+add_executable(respace src/respace.cpp)
