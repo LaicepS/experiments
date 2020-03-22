@@ -9,9 +9,13 @@ set(CPP_WARNINGS " \
     -pedantic \
 ")
 
+set(IGNORED_WARNINGS " \
+  -Wno-sign-compare \
+")
+
 set(CMAKE_CXX_COMPILER g++)
 
-set(CMAKE_CXX_FLAGS "-std=c++17 -Werror ${CPP_WARNINGS} ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++17 -Werror ${CPP_WARNINGS} ${IGNORED_WARNINGS} ${CMAKE_CXX_FLAGS}")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -39,3 +43,5 @@ add_to_cached_list( CGAL_EXECUTABLE_TARGETS cgal )
 target_link_libraries(cgal   ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES} )
 
 add_executable(respace src/respace.cpp)
+
+add_executable(sudoku src/sudoku.cpp)
