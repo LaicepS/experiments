@@ -226,13 +226,13 @@ int main() {
   }
 
   {
-    auto missing_top_left = basic_grid;
-    missing_top_left[0][0] = {};
-    missing_top_left[0][1] = {};
-    missing_top_left[1][0] = {};
-    missing_top_left[1][1] = {};
+    auto missing_top_left_corner = basic_grid;
+    missing_top_left_corner[0][0] = {};
+    missing_top_left_corner[0][1] = {};
+    missing_top_left_corner[1][0] = {};
+    missing_top_left_corner[1][1] = {};
 
-    auto const solve_try = solve(missing_top_left);
+    auto const solve_try = solve(missing_top_left_corner);
     assert(solve_try);
     auto const solved = solve_try.value();
     assert(solved == basic_grid);
