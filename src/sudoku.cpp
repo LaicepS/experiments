@@ -34,15 +34,35 @@ struct grid_solver {
         solvable = false;
         return;
       } else {
-        if (!new_numbers.value().empty()) {
-          cout << "new numbers: " << endl;
-          for (auto n : new_numbers.value())
-            cout << "new row,col : " << n.first << ", " << n.second << endl;
-        }
-        if (new_numbers.value().empty())
+        if (is_solved())
           return;
+        if (new_numbers.value().empty())
+          break;
       }
     }
+
+    for (int row = 0; row < grid_size; row++) {
+      for (int col = 0; col < grid_size; col++) {
+        for (auto cand : g[row][col].cands) {
+          auto new_solver = grid_solver({});
+          new_solver.g = g;
+          new_solver.g[row][col].s = cand;
+          auto s = new_solver.solve();
+          if (s) {
+          }
+        }
+      }
+    }
+  }
+
+  bool is_solved() {
+    for (auto row : g) {
+      for (auto square : row)
+        if (!square.s)
+          return false;
+    }
+
+    return true;
   }
 
   void to_solver_grid(grid const &grid_to_solve) {
