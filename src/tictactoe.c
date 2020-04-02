@@ -35,7 +35,7 @@ int all_same(int* grid) {
 bool equal(const value_type* a, size_type n, const value_type* b){
     /*@
       loop invariant 0 <= i <= n;
-      loop invariant \forall integer k; EqualRanges{Here, Here}(a, i, b);
+      loop invariant EqualRanges{Here, Here}(a, i, b);
       loop assigns i;
       loop variant n-i;
       */
@@ -44,6 +44,40 @@ bool equal(const value_type* a, size_type n, const value_type* b){
 	    return false;
 
     return true;
+}
+
+/*@
+  requires 0 <= n;
+  requires \valid_read(a+(0..n-1));
+  requires \valid_read(b+(0..n-1));
+
+  assigns \nothing;
+
+  behavior all_equal:
+    assumes EqualRanges{Here, Here}(a, n, b);
+    ensures \result == n;
+
+  behavior some_different:
+    assumes !EqualRanges{Here, Here}(a, n, b);
+    ensures 0 <= \result < n;
+    ensures EqualRanges{Here, Here}(a, \result, b);
+    ensures a[\result] != b[\result];
+
+  complete behaviors;
+  disjoint behaviors;
+*/
+size_type mismatch(const value_type * a, size_type n, const value_type* b) {
+    /*@
+      loop invariant 0 <= i <= n;
+      loop invariant EqualRanges{Here, Here}(a, i, b);
+      loop assigns i;
+      loop variant n - i;
+     */
+    for(int i = 0; i < n; i++)
+	if (a[i] != b[i])
+	    return i;
+
+    return n;
 }
 
 
