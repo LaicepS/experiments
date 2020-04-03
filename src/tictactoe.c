@@ -80,6 +80,84 @@ size_type mismatch(const value_type * a, size_type n, const value_type* b) {
     return n;
 }
 
+/*@
+  predicate
+    HasValue{A}(value_type* a, size_type n, value_type value) =
+      \exists integer i; 0 <= i < n && a[i] == value;
+ */
+/*@
+  requires 0 <= n;
+  requires \valid_read(a+(0..n-1));
+
+  assigns \nothing;
+
+  behavior in_array:
+    assumes HasValue(a, n, val);
+    ensures 0 <= \result < n;
+    ensures a[\result] == val;
+    ensures !HasValue(a, \result, val);
+
+  behavior not_in_array:
+    assumes !HasValue(a, n, val);
+    ensures \result == n;
+
+  complete behaviors;
+  disjoint behaviors;
+*/
+size_type find(const value_type* a, size_t n, value_type val) {
+    /*@
+      loop invariant 0 <= i <= n;
+      loop invariant !HasValue(a, i, val);
+      loop assigns i;
+      loop variant n - i;
+    */
+    for(size_t i = 0; i < n; i++) {
+	if (a[i] == val)
+	    return i;
+    }
+
+    return n;
+}
+
+/*@
+  predicate AShareOneValueWithB{A}(value_type* a, size_type m, value_type* b, size_type n) =
+    \exists integer i; 0 <= i < m && HasValue(b, n, a[i]);
+*/
+/*@
+  requires \valid_read(a+(0..m-1));
+  requires \valid_read(b+(0..n-1));
+
+  assigns \nothing;
+
+  behavior share_one:
+    assumes AShareOneValueWithB(a, m, b, n);
+
+    ensures !AShareOneValueWithB(a, \result, b, n);
+    ensures HasValue(b, n, a[\result]);
+    ensures 0 <= \result < m;
+
+  behavior share_none:
+    assumes !AShareOneValueWithB(a, m, b, n);
+    ensures \result == m;
+
+
+  complete behaviors;
+  disjoint behaviors;
+*/
+size_type find_first_of(const value_type* a, size_type m, const value_type* b, size_type n) {
+    /*@
+      loop invariant 0 <= i <= m;
+      loop invariant !AShareOneValueWithB(a, i, b, n);
+      loop assigns i;
+      loop variant m - i;
+    */
+    for(size_type i = 0; i < m; i++)
+	if (find(b, n, a[i]) != n)
+	    return i;
+
+    return m;
+}
+
 
 int main() {
     return 0;
