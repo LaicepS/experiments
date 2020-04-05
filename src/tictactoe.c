@@ -158,6 +158,81 @@ size_type find_first_of(const value_type* a, size_type m, const value_type* b, s
     return m;
 }
 
+/*@
+  predicate HasAdjacent(value_type* a, integer n) =
+    \exists integer i; 0 <= i < n - 1 && a[i] == a[i+1];
+*/
+/*@
+  requires \valid_read(a+(0..n-1));
+  assigns \nothing;
+
+  behavior adjacent_exist:
+    assumes HasAdjacent(a, n);
+
+    ensures !HasAdjacent(a, \result);
+    ensures 0 <= \result < n - 1;
+    ensures a[\result] == a[\result+1];
+
+  behavior no_adjacent:
+    assumes !HasAdjacent(a, n);
+    ensures \result == n;
+
+  complete behaviors;
+  disjoint behaviors;
+*/
+size_type adjacent_find(const value_type* a, size_type n) {
+    if (n == 0)
+	return n;
+    /*@
+      loop invariant 0 <= i <= n - 1;
+      loop invariant !HasAdjacent(a, i+1);
+      loop assigns i;
+      loop variant n - i;
+    */
+    for(size_type i = 0; i < n - 1; i++)
+	if(a[i] == a[i+1])
+	    return i;
+
+    return n;
+}
+
+/*@
+  predicate HasSubarray{Here}(value_type * a, integer n, value_type * b, size_type m) =
+    \exists integer i; 0 <= i <= n - m && EqualRanges{Here, Here}(a + i, m, b);
+*/
+/*@
+  requires \valid_read(a + (0..n));
+  requires \valid_read(b + (0..m));
+  requires m <= n;
+
+  assigns \nothing;
+
+  behavior contains:
+    assumes HasSubarray(a, n, b, m);
+
+    ensures \forall integer i; 0 <= i < \result ==> !HasSubarray(a, i + m, b, m);
+    ensures EqualRanges{Here, Here}(a + \result, m, b);
+
+  behavior no_subarray:
+    assumes !HasSubarray(a, n, b, m);
+    ensures \result == n;
+
+  complete behaviors;
+  disjoint behaviors;
+*/
+size_type search(const value_type * a, size_type n, const value_type * b, size_type m) {
+    /*@
+      loop invariant 0 <= i <= n - m + 1;
+      loop invariant \forall integer j; 0 <= j < i ==> !EqualRanges{Here, Here}(a + j, m, b);
+      loop assigns i;
+      loop variant n - i;
+    */
+    for(size_type i = 0; i <= n - m; i++)
+	if(equal(a + i, m, b))
+	    return i;
+
+    return n;
+}
 
 int main() {
     return 0;
