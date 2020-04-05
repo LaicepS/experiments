@@ -203,7 +203,8 @@ size_type adjacent_find(const value_type* a, size_type n) {
 /*@
   requires \valid_read(a + (0..n));
   requires \valid_read(b + (0..m));
-  requires m <= n;
+
+  ensures m > n ==> \result == m;
 
   assigns \nothing;
 
@@ -215,12 +216,15 @@ size_type adjacent_find(const value_type* a, size_type n) {
 
   behavior no_subarray:
     assumes !HasSubarray(a, n, b, m);
-    ensures \result == n;
+    ensures \result == m;
 
   complete behaviors;
   disjoint behaviors;
 */
 size_type search(const value_type * a, size_type n, const value_type * b, size_type m) {
+    if (m > n)
+	return m;
+
     /*@
       loop invariant 0 <= i <= n - m + 1;
       loop invariant \forall integer j; 0 <= j < i ==> !EqualRanges{Here, Here}(a + j, m, b);
@@ -231,7 +235,7 @@ size_type search(const value_type * a, size_type n, const value_type * b, size_t
 	if(equal(a + i, m, b))
 	    return i;
 
-    return n;
+    return m;
 }
 
 int main() {
