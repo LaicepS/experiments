@@ -238,6 +238,71 @@ size_type search(const value_type * a, size_type n, const value_type * b, size_t
     return m;
 }
 
+
+/*@
+  axiomatic CountAxiomatic
+  {
+    logic integer Count{L}(value_type* a, integer n, value_type v)
+	reads a[0..n-1];
+
+    axiom CountEmpty:
+	\forall value_type *a, v, integer n;
+	  n <= 0 ==> Count(a, n, v) == 0;
+
+    axiom CountOneHit:
+	\forall value_type *a, v, integer n;
+	  a[n] == v ==> Count(a, n + 1, v) == Count(a, n, v) + 1;
+
+    axiom CountOneMiss:
+	\forall value_type *a, v, integer n;
+	  a[n] != v ==> Count(a, n + 1, v) == Count(a, n, v);
+
+    axiom CountRead{L1,L2}:
+	\forall value_type *a, v, integer n;
+	  Unchanged{L1,L2}(a, n) ==>
+	    Count{L1}(a, n, v) == Count{L2}(a, n, v);
+  }
+*/
+/*@
+  lemma CountOne:
+    \forall value_type *a, v, integer n;
+      Count(a, n + 1, v) == Count(a, n, v) + Count(a + n, 1, v);
+
+  lemma CountUnion:
+    \forall value_type *a, v, integer n, k;
+	0 <= k ==> Count(a, n + k, v) == Count(a, n, v) + Count(a + n, k, v);
+
+  lemma CountBounds:
+    \forall value_type *a, v, integer n;
+      0 <= n ==> 0 <= Count(a, n, v) <= n;
+
+  lemma CountMonotonic:
+    \forall value_type *a, v, integer m, n;
+	0 <= m <= n ==> Count(a, m, v) <= Count(a, n, v);
+*/
+/*@
+  requires \valid_read(a + (0..n-1));
+
+  assigns \nothing;
+
+  ensures \result == Count(a, n, val);
+*/
+
+size_type count(const value_type* a, size_type n, value_type val) {
+    size_type count = 0;
+    /*@
+      loop invariant i <= 0 <= n;
+      loop invariant count == Count(a, i, val);
+      loop assigns i, count;
+      loop variant n - i;
+    */
+    for(size_type i = 0; i < n; i++)
+	if(a[i] == val)
+	    count++;
+
+    return count;
+}
+
 int main() {
     return 0;
 }
