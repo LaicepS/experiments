@@ -1,8 +1,5 @@
 #include <algorithm>
 #include <iostream>
-#include <range/v3/algorithm/any_of.hpp>
-#include <range/v3/algorithm/max_element.hpp>
-#include <range/v3/view/all.hpp>
 #include <string_view>
 #include <unordered_set>
 
