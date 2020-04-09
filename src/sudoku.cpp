@@ -1,7 +1,7 @@
 #include <array>
 #include <boost/type_traits/declval.hpp>
 #include <cassert>
-#include <experimental/optional>
+#include <optional>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
@@ -12,7 +12,6 @@
 enum erase_result { IMPOSSIBLE, NEW_VALUE, NOTHING };
 
 using namespace std;
-using namespace std::experimental;
 
 using value = int;
 

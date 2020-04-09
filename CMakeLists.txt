@@ -15,7 +15,9 @@ set(IGNORED_WARNINGS " \
 
 set(CMAKE_CXX_COMPILER clang++)
 
-set(CMAKE_CXX_FLAGS "-std=c++17 -Werror ${CPP_WARNINGS} ${IGNORED_WARNINGS} ${CMAKE_CXX_FLAGS}")
+set(YCM_FLAGS "-isystem /usr/lib/llvm-9/bin/../include/c++/v1")
+
+set(CMAKE_CXX_FLAGS "-std=c++17 -stdlib=libc++ -Werror ${CPP_WARNINGS} ${IGNORED_WARNINGS} ${YCM_FLAGS} ${CMAKE_CXX_FLAGS}")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -45,3 +47,5 @@ add_executable(word_distance src/word_distance.cpp)
 add_executable(respace src/respace.cpp)
 
 add_executable(sudoku src/sudoku.cpp)
+
+add_executable(longuest_word src/longuest_word.cpp)

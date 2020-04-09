@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <cassert>
-#include <experimental/string_view>
+#include <string_view>
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
@@ -8,7 +8,6 @@
 #include "NamedType/named_type.hpp"
 
 using namespace std;
-using namespace std::experimental;
 
 using Dict = unordered_set<string>;
 using Cost = int;
