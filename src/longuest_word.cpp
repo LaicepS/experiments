@@ -41,9 +41,9 @@ bool is_madeup(string_view const & word, Dict const & dict) {
 optional<string> longuest_madeup_word(Dict const &dict) {
   auto made_up_words = dict | rv::filter([&](auto const &word) { return is_madeup(word, dict); });
 
-  auto is_less = [](auto const &a, auto const &b) { return a.size() < b.size(); };
-
-  auto longuest = r::max_element(made_up_words, is_less);
+  auto longuest = r::max_element(made_up_words,[](auto const &a, auto const &b) {
+      return a.size() < b.size();
+  });
 
   if(longuest == r::end(made_up_words))
       return {};
