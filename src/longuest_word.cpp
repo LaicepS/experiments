@@ -48,7 +48,7 @@ optional<string> longuest_madeup_word(Dict const &dict) {
   if(longuest == r::end(made_up_words))
       return {};
   else
-      return make_optional(*longuest);
+      return *longuest;
 }
 
 int main() {
