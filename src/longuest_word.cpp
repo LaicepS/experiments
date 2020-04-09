@@ -20,10 +20,10 @@ namespace r = ranges;
 namespace rv = ranges::views;
 namespace ra = ranges::actions;
 
-using Dict = unordered_set<string>;
+using Dict = unordered_set<string_view>;
 
 bool is_madeup(string_view const & word, string_view const & original_word, Dict const & dict) {
-    if(can_find(dict, string(word)) && word != original_word)
+    if(can_find(dict, word) && word != original_word)
 	return true;
 
     auto word_indexes = rv::iota(0u, word.size());
@@ -38,7 +38,7 @@ bool is_madeup(string_view const & word, Dict const & dict) {
     return is_madeup(word, word, dict);
 }
 
-optional<string> longuest_madeup_word(Dict const &dict) {
+optional<string_view> longuest_madeup_word(Dict const &dict) {
   auto made_up_words = dict | rv::filter([&](auto const &word) { return is_madeup(word, dict); });
 
   auto longuest = r::max_element(made_up_words,[](auto const &a, auto const &b) {
