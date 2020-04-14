@@ -49,3 +49,5 @@ add_executable(respace src/respace.cpp)
 add_executable(sudoku src/sudoku.cpp)
 
 add_executable(longuest_word src/longuest_word.cpp)
+
+add_executable(two_missing src/two_missing.cpp)

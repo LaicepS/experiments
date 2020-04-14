@@ -13,5 +13,3 @@ template<typename cont_type, typename pred_fn>
 auto any_of(cont_type const & c, pred_fn fn) {
     return std::any_of(begin(c), end(c), fn);
 }
-
-}
